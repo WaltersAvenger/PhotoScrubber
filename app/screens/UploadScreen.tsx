@@ -6,8 +6,8 @@ import { AppStackScreenProps } from "../navigators"
 import { colors, spacing } from "../theme"
 import { launchImageLibrary, ImageLibraryOptions } from "react-native-image-picker"
 import ExifReader from "exifreader"
-import RNFS from "react-native-fs"
-import { decode } from "base64-arraybuffer"
+// import { decode } from "base64-arraybuffer"
+import { Buffer } from "buffer"
 
 interface UploadScreenProps extends AppStackScreenProps<"Upload"> {}
 
@@ -16,9 +16,9 @@ export const UploadScreen: FC<UploadScreenProps> = observer(function UploadScree
     console.log(result)
 
     for (const asset of result.assets) {
-      const b64Buffer = await RNFS.readFile(asset.uri, "base64") // Where the URI looks like this: "file:///path/to/image/IMG_0123.HEIC"
-      const fileBuffer = decode(b64Buffer)
-      const tags = ExifReader.load(fileBuffer, { expanded: true })
+      const b64Buffer = Buffer.from(asset.base64, "base64") // Where the URI looks like this: "file:///path/to/image/IMG_0123.HEIC"
+      // const fileBuffer = decode(b64Buffer)
+      const tags = ExifReader.load(b64Buffer, { expanded: true })
       console.log(tags)
     }
   }
@@ -27,6 +27,7 @@ export const UploadScreen: FC<UploadScreenProps> = observer(function UploadScree
     const options: ImageLibraryOptions = {
       includeExtra: true,
       mediaType: "photo",
+      includeBase64: true,
     }
 
     launchImageLibrary(options, callback)
