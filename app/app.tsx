@@ -39,6 +39,7 @@ const config = {
     Login: {
       path: "",
     },
+    Upload: "upload",
     Welcome: "welcome",
     Demo: {
       screens: {
